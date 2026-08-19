@@ -1,8 +1,8 @@
-# Submission — Vijit Kohli
+# Infotainment Engineer Aptitude Test
 
 ## Running it
 
-Q1 and Q2 are independent packages; install in each.
+Q1 and Q2 are independent packages; install in each
 
 ```
 cd q1 && npm install && npm test    # 51 tests
@@ -14,7 +14,7 @@ npm start                           # localhost:3000 redirects to Swagger UI at 
 
 ## Where to look
 
-`assumptions.md` and `design_choices.md` carry the reasoning behind the submission — what it assumes and cannot prove from the supplied data, and which decisions could have gone the other way. `design_choices.md` also lists known limitations and what production would need.
+`assumptions.md` and `design_choices.md` carry the reasoning behind the submission, it contains what it assumes and cannot prove from the supplied data, and which decisions could have gone the other way. `design_choices.md` also lists known limitations and what production would need.
 
 For Q1, `q1/README.md` covers the cleaning approach and the approaches that were tried and dropped: alpha-beta filtering was built and measured before being rejected, and GPS-derived speed was investigated as a cross-check and rejected on the evidence. The logic itself is in `q1/lib/normalise.js`, which is pure and worth reading before `q1/src/Dashboard.jsx`. Each channel is emitted with a quality status, and the UI branches on nothing else.
 
@@ -31,3 +31,9 @@ Q1 recovers what it can from bad data and Q2 rejects it. Q1 reads a recorded fil
 ## Optional Q3 extra
 
 `q3/track-mode-preview.png` is the Track Mode screen. `q3/figma-track-mode/` builds the editable Figma file with its component sets, and `q3/track-mode.svg` can be placed directly.
+
+### Preview:
+![alt text](image.png)
+
+Figma link: 
+https://www.figma.com/design/PMf5FtyT1uNXnz00RgqGkj/Untitled?node-id=1-2&t=aZSNyTFYNLc4501X-1

@@ -1,68 +1,33 @@
-# Sunswift Infotainment – Aptitude Test
-Welcome to the Sunswift Infotainment aptitude test! This 'test' is not a stressful, high stakes exam or a strict pass/fail test. 
+# Submission — Vijit Kohli
 
-We are not expecting perfect answers, flawless code, or fully polished solutions.
+## Running it
 
-The purpose of this aptitude test is to understand:
-- Your current skill level
-- How you think through problems
-- Your ability to learn independently
-- How you communicate your reasoning
-- How you approach messy, real world engineering constraints
-- How you write and structure code clearly
-- Your attitude toward problem solving and trade-offs
-    
-You are not being judged on deep technical correctness alone.  
-We care far more about:
-- your approach,
-- your clarity of thought,
-- how you explain decisions,
-- how you break down a problem,
-- and how you structure a small solution.
+Q1 and Q2 are independent packages; install in each.
 
-Mistakes are fine. Imperfect solutions are fine!
+```
+cd q1 && npm install && npm test    # 51 tests
+npm run dev                         # dashboard and speed chart
 
-The entire test should take **approximately 3–4 hours** in total. There is no penalty for going under or over, spend as much time as you like, we just don't want to take up all your time with this. 
+cd q2 && npm install && npm test    # 40 tests
+npm start                           # localhost:3000 redirects to Swagger UI at /docs
+```
 
---- 
-## Overview of the test
-You will complete **three tasks**, each focusing on a different aspect of software engineering relevant to Sunswift. Please read each question description (inside each folder) in detail before starting the questions.
+## Where to look
 
-**1. Telemetry Parsing & Visualisation (Frontend – React)**
-You will clean and normalise a messy telemetry dataset, then display key values and create a simple speed-time chart.
+`assumptions.md` and `design_choices.md` carry the reasoning behind the submission — what it assumes and cannot prove from the supplied data, and which decisions could have gone the other way. `design_choices.md` also lists known limitations and what production would need.
 
-This tests:
-- Data cleaning
-- Working with incomplete/corrupted real world data
-- Basic visualisation
-- Frontend structure & fundamentals
+For Q1, `q1/README.md` covers the cleaning approach and the approaches that were tried and dropped: alpha-beta filtering was built and measured before being rejected, and GPS-derived speed was investigated as a cross-check and rejected on the evidence. The logic itself is in `q1/lib/normalise.js`, which is pure and worth reading before `q1/src/Dashboard.jsx`. Each channel is emitted with a quality status, and the UI branches on nothing else.
 
-We've set React as the preferred language for this however feel free to use python/flask if you're only comfortable with this.
+For Q2, `q2/app.js` holds the design comment and both endpoints. `q2/validate.js` and `q2/summary.js` are pure and tested directly. `q2/openapi.yaml` is the contract, easiest read as the rendered page at `/docs`.
 
----
- **2. Telemetry API (Backend – Node.js + Express)**
-You will create two API endpoints: one for uploading telemetry logs and one for returning summary statistics.  
+Q3 is `q3/a3.md`.
 
-This tests:
-- API design
-- Input validation
-- State management
-- Clean backend structure
-- Reasoning about data integrity
+## Two notes
 
----
-**3. Written Question — Infotainment System Design**
-A short written response exploring what makes race car infotainment unique and how to design safe, reliable software under real world constraints.  
+`q1/telemetry_sample.json` is unmodified. The app reads `q1/telemetry_overheat.json`, the same 24 rows plus a 12-sample temperature climb, because the supplied sample peaks at 76.9 °C and the `motorTemp > 90` warning would never fire against it. Adding a second fixture seemed better than editing the supplied one.
 
-This tests:
-- Communication
-- Systems thinking
-- Safety awareness
-- UX & UI reasoning
-- Real world engineering understanding
+Q1 recovers what it can from bad data and Q2 rejects it. Q1 reads a recorded file where a rejected reading is lost permanently; Q2 is an ingest boundary where a producer sending the wrong type can be fixed. Both are argued in `design_choices.md`.
 
----
-## **How to Submit**
-Please clone this repository and email the link to the repo to this email shawn.woo@student.unsw.edu.au.
+## Optional Q3 extra
 
-Feel free to contact me with the email above if you have any questions. 
+`q3/track-mode-preview.png` is the Track Mode screen. `q3/figma-track-mode/` builds the editable Figma file with its component sets, and `q3/track-mode.svg` can be placed directly.

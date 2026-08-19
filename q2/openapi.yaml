@@ -1,0 +1,346 @@
+openapi: 3.0.3
+
+info:
+  title: Sunswift Telemetry API
+  version: 1.0.0
+  description: |
+    Receives batches of telemetry uploaded periodically from the car, validates them, stores
+    them in memory, and summarises them for engineers.
+
+    **Acceptance is per entry, not per batch.** Valid entries are stored and invalid ones are
+    reported by index, so a single corrupt frame never discards a batch of otherwise-usable
+    vehicle data.
+
+    **`(timestamp, component)` is a composite event key.** For this exercise it is treated as
+    the event's identity, assuming a component cannot produce more than one reading in the same
+    millisecond. This makes `POST` uploads idempotent: retrying an accepted event does not store
+    it twice. Identical keys and values are reported as duplicates, while identical keys with
+    different values are reported as conflicts. Explicit corrections are outside this API and
+    could be added later through `PUT` or `PATCH`.
+
+    One consequence worth knowing: a fully replayed batch returns `400` with every entry marked
+    `DUPLICATE_EVENT`, which reports that nothing new was stored rather than that the payload
+    was malformed. One status code cannot express both.
+
+    **Validation is strict and non-coercive.** Types must match exactly — `"72.4"` is
+    rejected, not parsed — `component` is matched case-sensitively without trimming, and
+    unknown fields are stripped before storage.
+
+    Any unmatched route returns `404` with the request-level error envelope.
+
+servers:
+  - url: http://localhost:3000
+
+tags:
+  - name: logs
+    description: Telemetry ingest and summary
+
+paths:
+  /logs/upload:
+    post:
+      tags: [logs]
+      summary: Upload a batch of telemetry logs
+      description: |
+        Each entry is validated independently in array order. Accepted entries are stored
+        immediately, so a key repeated later in the same batch collides with the earlier
+        occurrence and the first one wins.
+
+        The status reflects how much of the batch was stored: `200` all, `207` some, `400`
+        none. All three carry the same upload-result body.
+      operationId: uploadLogs
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              minItems: 1
+              items: { $ref: '#/components/schemas/LogEntry' }
+            examples:
+              batch:
+                summary: A batch of three readings
+                value:
+                  - { timestamp: 1755500000000, component: battery, value: 72.4 }
+                  - { timestamp: 1755500000000, component: motor, value: 61 }
+                  - { timestamp: 1755500001000, component: gps, value: 0.0123 }
+      responses:
+        '200':
+          description: Every entry was accepted and stored.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/UploadResult' }
+              example:
+                { received: 3, accepted: 3, rejected: 0, totalStored: 127, errors: [] }
+        '207':
+          description: Some entries were stored; the rest are reported by index.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/UploadResult' }
+              example:
+                received: 4
+                accepted: 2
+                rejected: 2
+                totalStored: 126
+                errors:
+                  - index: 1
+                    code: INVALID_ENTRY
+                    message: Entry failed validation
+                    details:
+                      - field: component
+                        code: INVALID_COMPONENT
+                        message: 'component must be one of: battery, motor, gps'
+                  - index: 3
+                    code: EVENT_CONFLICT
+                    message: An event for component 'battery' at timestamp 1755500000000 is already stored with value 72.4
+        '400':
+          description: |
+            Two distinct cases, distinguished by body shape rather than by status.
+
+            **No entry was accepted** — the batch reached entry processing, so the
+            upload-result body applies and `errors` says why each entry failed.
+
+            **The batch never reached entry processing** — an empty array, a non-array body,
+            or unparseable JSON — so the request-level envelope applies instead.
+
+            A client tells them apart by the presence of `received` versus `error`. `422` for
+            the first case would have separated them by status; `400` was chosen deliberately.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/UploadResult'
+                  - $ref: '#/components/schemas/RequestError'
+              examples:
+                allRejected:
+                  summary: All entries invalid (upload-result shape)
+                  value:
+                    received: 2
+                    accepted: 0
+                    rejected: 2
+                    totalStored: 124
+                    errors:
+                      - index: 0
+                        code: INVALID_ENTRY
+                        message: Entry failed validation
+                        details:
+                          - field: timestamp
+                            code: MISSING_FIELD
+                            message: timestamp is required
+                          - field: value
+                            code: INVALID_TYPE
+                            message: value must be a finite number
+                      - index: 1
+                        code: DUPLICATE_EVENT
+                        message: An identical event for component 'motor' at timestamp 1755500001000 is already stored
+                emptyBatch:
+                  summary: Empty array
+                  value: { error: { code: EMPTY_BATCH, message: Request body must contain at least one log entry } }
+                bodyNotArray:
+                  summary: Missing or non-array body
+                  value: { error: { code: BODY_NOT_ARRAY, message: Request body must be a JSON array of log entries } }
+                malformedJson:
+                  summary: Unparseable JSON
+                  value: { error: { code: MALFORMED_JSON, message: Request body could not be parsed as JSON } }
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /logs/summary:
+    get:
+      tags: [logs]
+      summary: Summarise everything stored
+      description: |
+        Recomputed in one pass per request rather than maintained as running aggregates.
+
+        All three components always appear, whether or not they hold data. A component with
+        no events reports `null` statistics rather than zeros, because `0` is a reading a
+        sensor can genuinely produce and cannot also mean "none" — the same rule the Q1
+        dashboard follows when it renders `--` instead of `0`.
+
+        Averages are unrounded: how many decimals to show is a presentation concern.
+      operationId: getSummary
+      responses:
+        '200':
+          description: |
+            Always `200`. An empty store is a valid state, not a missing resource.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Summary' }
+              examples:
+                populated:
+                  summary: With stored events
+                  value:
+                    count: 124
+                    components:
+                      battery: { min: 68, max: 76, avg: 72.40384615384616, count: 52 }
+                      motor: { min: 61, max: 95, avg: 73.10416666666667, count: 48 }
+                      gps: { min: 0.0123, max: 0.129, avg: 0.05673333333333333, count: 24 }
+                    latest: { timestamp: 1755500123000, component: motor, value: 81.2 }
+                empty:
+                  summary: Nothing uploaded yet
+                  value:
+                    count: 0
+                    components:
+                      battery: { min: null, max: null, avg: null, count: 0 }
+                      motor: { min: null, max: null, avg: null, count: 0 }
+                      gps: { min: null, max: null, avg: null, count: 0 }
+                    latest: null
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+components:
+  responses:
+    InternalError:
+      description: Unexpected server fault. The message is deliberately generic — no stack traces are exposed.
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/RequestError' }
+          example: { error: { code: INTERNAL_ERROR, message: An unexpected error occurred } }
+
+  schemas:
+    LogEntry:
+      type: object
+      required: [timestamp, component, value]
+      additionalProperties: true
+      description: |
+        Unknown fields are accepted and stripped rather than rejected, so an additive schema
+        change at the producer does not break ingest, and nothing undocumented reaches storage.
+      properties:
+        timestamp:
+          type: integer
+          format: int64
+          minimum: 0
+          description: |
+            Milliseconds since epoch. Must be a non-negative integer, not a numeric string.
+            No plausible-date window is enforced — bounding this to recent timestamps would
+            assert a deployment timeline the brief does not give.
+          example: 1755500000000
+        component:
+          type: string
+          enum: [battery, motor, gps]
+          description: |
+            Matched exactly. Not trimmed, not lowercased — `"Battery "` is a producer bug
+            worth surfacing at ingest rather than quietly repairing here.
+          example: battery
+        value:
+          type: number
+          description: |
+            Must be a finite number. `NaN`, `Infinity` and numeric strings are rejected, and
+            `0` is a valid reading. No per-component ranges are enforced: the `gps` value
+            channel's semantics are undocumented, so bounding it would mean inventing them.
+          example: 72.4
+
+    StoredEvent:
+      type: object
+      description: A stored event, normalised to the documented fields only.
+      required: [timestamp, component, value]
+      properties:
+        timestamp: { type: integer, format: int64, example: 1755500123000 }
+        component: { type: string, enum: [battery, motor, gps], example: motor }
+        value: { type: number, example: 81.2 }
+
+    UploadResult:
+      type: object
+      required: [received, accepted, rejected, totalStored, errors]
+      properties:
+        received: { type: integer, description: Entries in the submitted batch., example: 4 }
+        accepted: { type: integer, description: Entries newly stored., example: 2 }
+        rejected:
+          type: integer
+          description: |
+            Entries not stored, for any reason. Duplicates and conflicts count here, so
+            `received = accepted + rejected` always holds.
+          example: 2
+        totalStored: { type: integer, description: Size of the store after this upload., example: 126 }
+        errors:
+          type: array
+          description: One entry per rejected entry, so `errors.length` equals `rejected`.
+          items: { $ref: '#/components/schemas/EntryError' }
+
+    EntryError:
+      type: object
+      required: [index, code, message]
+      description: |
+        Submitted values are never echoed back. The client still holds the payload, and the
+        zero-based `index` points straight into it.
+      properties:
+        index: { type: integer, description: Zero-based position in the submitted array., example: 1 }
+        code:
+          type: string
+          enum: [INVALID_ENTRY, DUPLICATE_EVENT, EVENT_CONFLICT]
+          description: |
+            `INVALID_ENTRY` carries `details`. `DUPLICATE_EVENT` means the key was already
+            stored with the same value; `EVENT_CONFLICT` means it was stored with a different
+            one. Neither overwrites what is held.
+          example: INVALID_ENTRY
+        message: { type: string, example: Entry failed validation }
+        details:
+          type: array
+          description: |
+            Present only for `INVALID_ENTRY`. Lists every field problem in the entry so the
+            producer can fix them in one pass, without cascading — a missing field reports
+            `MISSING_FIELD` alone, never also `INVALID_TYPE`.
+          items: { $ref: '#/components/schemas/ErrorDetail' }
+
+    ErrorDetail:
+      type: object
+      required: [field, code, message]
+      properties:
+        field:
+          type: string
+          nullable: true
+          description: The offending field, or `null` when the entry itself is not a JSON object.
+          example: component
+        code:
+          type: string
+          enum: [MISSING_FIELD, INVALID_TYPE, INVALID_COMPONENT]
+          example: INVALID_COMPONENT
+        message: { type: string, example: 'component must be one of: battery, motor, gps' }
+
+    RequestError:
+      type: object
+      description: Used when the request could not be processed as a batch at all.
+      required: [error]
+      properties:
+        error:
+          type: object
+          required: [code, message]
+          properties:
+            code:
+              type: string
+              enum: [EMPTY_BATCH, BODY_NOT_ARRAY, MALFORMED_JSON, NOT_FOUND, INTERNAL_ERROR]
+              example: BODY_NOT_ARRAY
+            message: { type: string, example: Request body must be a JSON array of log entries }
+
+    ComponentStats:
+      type: object
+      required: [min, max, avg, count]
+      properties:
+        min: { type: number, nullable: true, example: 68 }
+        max: { type: number, nullable: true, example: 76 }
+        avg:
+          type: number
+          nullable: true
+          description: Unrounded. `null` when the component holds no events — never `0`.
+          example: 72.40384615384616
+        count: { type: integer, example: 52 }
+
+    Summary:
+      type: object
+      required: [count, components, latest]
+      properties:
+        count: { type: integer, description: Total stored events across all components., example: 124 }
+        components:
+          type: object
+          description: All three components always present, populated or not.
+          required: [battery, motor, gps]
+          properties:
+            battery: { $ref: '#/components/schemas/ComponentStats' }
+            motor: { $ref: '#/components/schemas/ComponentStats' }
+            gps: { $ref: '#/components/schemas/ComponentStats' }
+        latest:
+          allOf: [{ $ref: '#/components/schemas/StoredEvent' }]
+          nullable: true
+          description: |
+            The event with the greatest `timestamp`, not the most recently uploaded — a late
+            batch of older readings must not displace a newer one. Components may share a
+            timestamp, so ties go to the earliest-stored record. `null` when nothing is stored.

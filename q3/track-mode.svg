@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="900" viewBox="0 0 1440 900" role="img" aria-label="Sunswift Track Mode infotainment screen">
+  <title>Sunswift Track Mode</title>
+  <desc>Landscape race telemetry screen. Colours sampled from the public sunswift.com site and icon.svg (#0A0C0E, #FFD400); not claimed as official brand tokens. Mock-up values only.</desc>
+
+  <g id="Track Mode">
+    <rect id="Background" width="1440" height="900" fill="#0A0C0E"/>
+
+    <g id="Header">
+    <rect id="Brand Mark" x="48" y="34" width="6" height="26" fill="#FFD400"/>
+    <text id="Wordmark" x="68" y="55" fill="#E4DFD4" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" font-weight="600" letter-spacing="1.2">SUNSWIFT</text>
+    <text id="Mode Label" x="222" y="55" fill="#C9C4B8" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" font-weight="600" letter-spacing="1.2">TRACK MODE</text>
+    <text id="GPS Label" x="1180" y="55" text-anchor="end" fill="#E4DFD4" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="16" font-weight="600" letter-spacing="1.2">GPS</text>
+    <text id="GPS Value" x="1230" y="55" text-anchor="end" fill="#C9C4B8" font-family="Menlo, ui-monospace, monospace" font-size="22" font-weight="700">&#8212;</text>
+    <text id="GPS State" x="1392" y="55" text-anchor="end" fill="#C9C4B8" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="16" font-weight="600" letter-spacing="0.8">NO SIGNAL</text>
+    </g>
+    <g id="Warning Banner">
+    <rect id="Banner Field" x="48" y="86" width="1344" height="96" fill="#43140F"/>
+    <rect id="Banner Accent" x="48" y="86" width="8" height="96" fill="#FF5B4F"/>
+    <polygon id="Warning Mark" points="96,106 118,146 74,146" fill="#FF5B4F"/>
+    <rect id="Mark Stem" x="94" y="118" width="4.5" height="15" fill="#43140F"/>
+    <rect id="Mark Dot" x="94" y="137" width="4.5" height="4.5" fill="#43140F"/>
+    <text id="Banner Message" x="140" y="145" fill="#F3F0E8" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="32" font-weight="700" letter-spacing="1">MOTOR TEMPERATURE HIGH</text>
+    <text id="Banner Reading" x="1360" y="145" text-anchor="end" fill="#F3F0E8" font-family="Menlo, ui-monospace, monospace" font-size="26" font-weight="700">91 &#176;C &#183; LIMIT 90</text>
+    </g>
+    <g id="Speed">
+    <text id="Speed Label" x="48" y="238" fill="#E4DFD4" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="20" font-weight="600" letter-spacing="1.6">SPEED</text>
+    <text id="Speed Value" x="480" y="452" text-anchor="end" fill="#F3F0E8" font-family="Menlo, ui-monospace, monospace" font-size="240" font-weight="700">84</text>
+    <text id="Speed Unit" x="512" y="452" fill="#C9C4B8" font-family="Menlo, ui-monospace, monospace" font-size="36" font-weight="700">km/h</text>
+    <rect id="Speed State Rule" x="48" y="482" width="26" height="6" fill="#E39B12"/>
+    <rect x="92" y="482" width="26" height="6" fill="#E39B12"/>
+    <rect x="136" y="482" width="26" height="6" fill="#E39B12"/>
+    <rect x="180" y="482" width="26" height="6" fill="#E39B12"/>
+    <rect x="224" y="482" width="26" height="6" fill="#E39B12"/>
+    <rect x="268" y="482" width="26" height="6" fill="#E39B12"/>
+    <rect x="312" y="482" width="26" height="6" fill="#E39B12"/>
+    <rect x="356" y="482" width="26" height="6" fill="#E39B12"/>
+    <rect x="400" y="482" width="26" height="6" fill="#E39B12"/>
+    <rect x="444" y="482" width="26" height="6" fill="#E39B12"/>
+    <text id="Speed State" x="48" y="518" fill="#E39B12" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="20" font-weight="600" letter-spacing="1.6">ESTIMATED</text>
+    </g>
+    <g id="Motor Temperature">
+    <text id="Motor Label" x="1040" y="238" fill="#E4DFD4" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="20" font-weight="600" letter-spacing="1.6">MOTOR TEMP</text>
+    <text id="Motor Value" x="1336" y="336" text-anchor="end" fill="#FF5B4F" font-family="Menlo, ui-monospace, monospace" font-size="112" font-weight="700">91</text>
+    <text id="Motor Unit" x="1356" y="336" fill="#C9C4B8" font-family="Menlo, ui-monospace, monospace" font-size="30" font-weight="700">&#176;C</text>
+    <rect id="Motor State Rule" x="1040" y="356" width="296" height="6" fill="#FF5B4F"/>
+    <text id="Motor State" x="1040" y="392" fill="#FF5B4F" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="20" font-weight="600" letter-spacing="1.6">OVER LIMIT</text>
+    </g>
+    <g id="Battery">
+    <text id="Battery Label" x="1040" y="470" fill="#E4DFD4" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="20" font-weight="600" letter-spacing="1.6">BATTERY</text>
+    <text id="Battery Value" x="1336" y="560" text-anchor="end" fill="#F3F0E8" font-family="Menlo, ui-monospace, monospace" font-size="96" font-weight="700">72</text>
+    <text id="Battery Unit" x="1356" y="560" fill="#C9C4B8" font-family="Menlo, ui-monospace, monospace" font-size="30" font-weight="700">%</text>
+    </g>
+    <g id="Speed History">
+    <rect id="Chart Rule" x="48" y="644" width="1344" height="1" fill="#2E3236"/>
+    <text id="Chart Title" x="48" y="678" fill="#E4DFD4" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" font-weight="600" letter-spacing="1.4">SPEED HISTORY</text>
+    <text id="Chart Meta" x="1392" y="678" text-anchor="end" fill="#C9C4B8" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" font-weight="500">km/h &#183; LAST 20 s</text>
+    <g id="Chart Grid">
+    <rect id="Grid 100" x="108" y="698" width="1236" height="1" fill="#444A50"/>
+    <text id="Y 100" x="96" y="703" text-anchor="end" fill="#C9C4B8" font-family="Menlo, ui-monospace, monospace" font-size="16" font-weight="600">100</text>
+    <rect id="Grid 75" x="108" y="756" width="1236" height="1" fill="#444A50"/>
+    <text id="Y 75" x="96" y="761" text-anchor="end" fill="#C9C4B8" font-family="Menlo, ui-monospace, monospace" font-size="16" font-weight="600">75</text>
+    <rect id="Grid 50" x="108" y="814" width="1236" height="1" fill="#5C6269"/>
+    <text id="Y 50" x="96" y="819" text-anchor="end" fill="#C9C4B8" font-family="Menlo, ui-monospace, monospace" font-size="16" font-weight="600">50</text>
+    <text id="X -20" x="108" y="846" fill="#C9C4B8" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="16" font-weight="500">-20 s</text>
+    <text id="X -10" x="726" y="846" text-anchor="middle" fill="#C9C4B8" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="16" font-weight="500">-10 s</text>
+    <text id="X Now" x="1344" y="846" text-anchor="end" fill="#E4DFD4" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="16" font-weight="600">NOW</text>
+    </g>
+    <g id="Chart Trace">
+    <polygon fill="#F3F0E8" points="108.2,797.4 173.3,790 172.8,786 107.8,793.5"/>
+    <polygon fill="#F3F0E8" points="173.3,790 238.4,781.2 237.8,777.2 172.8,786"/>
+    <polygon fill="#F3F0E8" points="238.4,781.2 303.5,771 302.8,767 237.8,777.2"/>
+    <polygon fill="#F3F0E8" points="303.5,771 368.5,760.8 367.9,756.8 302.8,767"/>
+    <polygon fill="#F3F0E8" points="368.5,760.8 433.6,751 433,747.1 367.9,756.8"/>
+    <polygon fill="#F3F0E8" points="433.5,751 498.6,742.7 498.1,738.7 433,747.1"/>
+    <polygon fill="#F3F0E8" points="498.5,742.7 563.6,736.6 563.2,732.7 498.1,738.7"/>
+    <polygon fill="#E39B12" points="563.4,736.7 577.4,736.6 577.4,732.6 563.4,732.7"/>
+    <polygon fill="#E39B12" points="587.4,736.5 601.4,736.4 601.4,732.4 587.4,732.5"/>
+    <polygon fill="#E39B12" points="611.4,736.3 625.4,736.2 625.4,732.2 611.4,732.3"/>
+    <polygon fill="#E39B12" points="635.3,736.3 649.3,736.6 649.4,732.6 635.4,732.3"/>
+    <polygon fill="#E39B12" points="659.3,736.9 673.3,737.2 673.4,733.2 659.4,732.9"/>
+    <polygon fill="#E39B12" points="683.3,737.4 693.4,737.6 693.5,733.6 683.4,733.4"/>
+    <circle id="Estimated Point 8" cx="628.4" cy="734.2" r="7" fill="#E39B12"/>
+    <circle cx="628.4" cy="734.2" r="4" fill="#0A0C0E"/>
+    <circle id="Estimated Point 9" cx="693.5" cy="735.6" r="7" fill="#E39B12"/>
+    <circle cx="693.5" cy="735.6" r="4" fill="#0A0C0E"/>
+    <rect id="Gap Tick Left" x="692" y="715.6" width="3" height="40" fill="#C9C4B8"/>
+    <rect id="Gap Tick Right" x="887.1" y="734.6" width="3" height="40" fill="#C9C4B8"/>
+    <circle id="Recovered Point" cx="888.6" cy="754.6" r="7" fill="#E39B12"/>
+    <polygon fill="#F3F0E8" points="888.8,756.6 953.8,751.5 953.5,747.5 888.5,752.6"/>
+    <polygon fill="#F3F0E8" points="953.9,751.5 1018.9,745.5 1018.6,741.5 953.5,747.5"/>
+    <polygon fill="#F3F0E8" points="1018.9,745.5 1083.9,741.3 1083.7,737.3 1018.6,741.5"/>
+    <polygon fill="#F3F0E8" points="1083.9,741.3 1148.9,738.5 1148.8,734.5 1083.7,737.3"/>
+    <polygon fill="#E39B12" points="1148.9,738.5 1162.9,738.3 1162.8,734.3 1148.8,734.5"/>
+    <polygon fill="#E39B12" points="1172.9,738.2 1186.9,738 1186.8,734 1172.8,734.2"/>
+    <polygon fill="#E39B12" points="1196.9,737.8 1210.9,737.6 1210.8,733.6 1196.8,733.8"/>
+    <polygon fill="#E39B12" points="1220.8,737.5 1234.8,737.4 1234.8,733.4 1220.8,733.5"/>
+    <polygon fill="#E39B12" points="1244.8,737.4 1258.8,737.3 1258.8,733.3 1244.8,733.4"/>
+    <polygon fill="#E39B12" points="1268.8,737.2 1279,737.1 1278.9,733.1 1268.8,733.2"/>
+    <polygon fill="#E39B12" points="1278.9,737.1 1282.8,737.1 1282.8,733.1 1278.9,733.1"/>
+    <polygon fill="#E39B12" points="1292.8,737.1 1306.8,737.1 1306.8,733.1 1292.8,733.1"/>
+    <polygon fill="#E39B12" points="1316.8,737.1 1330.8,737.1 1330.8,733.1 1316.8,733.1"/>
+    <polygon fill="#E39B12" points="1340.8,737.1 1344,737.1 1344,733.1 1340.8,733.1"/>
+    <circle id="Estimated Point 17" cx="1213.9" cy="735.6" r="7" fill="#E39B12"/>
+    <circle cx="1213.9" cy="735.6" r="4" fill="#0A0C0E"/>
+    <circle id="Estimated Point 18" cx="1278.9" cy="735.1" r="7" fill="#E39B12"/>
+    <circle cx="1278.9" cy="735.1" r="4" fill="#0A0C0E"/>
+    <circle id="Estimated Point 19" cx="1344" cy="735.1" r="7" fill="#E39B12"/>
+    <circle cx="1344" cy="735.1" r="4" fill="#0A0C0E"/>
+    </g>
+    <g id="Chart Legend">
+    <g id="Legend Measured">
+    <rect x="48" y="872" width="51" height="4" fill="#F3F0E8"/>
+    <text x="111" y="880" fill="#E4DFD4" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="16" font-weight="500">Measured</text>
+    </g>
+    <g id="Legend Estimated">
+    <rect x="227" y="872" width="14" height="4" fill="#E39B12"/>
+    <rect x="264" y="872" width="14" height="4" fill="#E39B12"/>
+    <circle cx="252.5" cy="874" r="7" fill="#E39B12"/>
+    <circle cx="252.5" cy="874" r="4" fill="#0A0C0E"/>
+    <text x="290" y="880" fill="#E4DFD4" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="16" font-weight="500">Estimated</text>
+    </g>
+    <g id="Legend Recovered">
+    <rect x="415" y="872" width="51" height="4" fill="#F3F0E8"/>
+    <circle cx="440.5" cy="874" r="7" fill="#E39B12"/>
+    <text x="478" y="880" fill="#E4DFD4" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="16" font-weight="500">Confirmed late</text>
+    </g>
+    <g id="Legend Unavailable">
+    <rect x="648" y="872" width="12" height="4" fill="#C9C4B8"/>
+    <rect x="663" y="862" width="3" height="24" fill="#C9C4B8"/>
+    <rect x="681" y="862" width="3" height="24" fill="#C9C4B8"/>
+    <rect x="687" y="872" width="12" height="4" fill="#C9C4B8"/>
+    <text x="711" y="880" fill="#E4DFD4" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="16" font-weight="500">No signal</text>
+    </g>
+    </g>
+    </g>
+  </g>
+</svg>

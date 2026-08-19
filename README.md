@@ -33,7 +33,7 @@ Q1 recovers what it can from bad data and Q2 rejects it. Q1 reads a recorded fil
 `q3/track-mode-preview.png` is the Track Mode screen. `q3/figma-track-mode/` builds the editable Figma file with its component sets.
 
 ### Preview:
-![alt text](image.png)
+![Track Mode screen](q3/track-mode-preview.png)
 
 Figma link: 
 https://www.figma.com/design/PMf5FtyT1uNXnz00RgqGkj/Untitled?node-id=1-2&t=aZSNyTFYNLc4501X-1

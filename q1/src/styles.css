@@ -1,0 +1,122 @@
+:root {
+  --ink: #1b1f24;
+  --muted: #6b7480;
+  --line: #d8dee4;
+  --warn: #b3541e;
+  --alarm: #c2251c;
+  font-family: system-ui, sans-serif;
+  color: var(--ink);
+}
+
+body {
+  margin: 0;
+  background: #f6f8fa;
+}
+
+.dashboard {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 24px 16px 48px;
+}
+
+h1 {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.readouts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.readout {
+  flex: 1 1 160px;
+  padding: 12px 14px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+
+.readout .label {
+  display: block;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+.readout .value {
+  display: block;
+  font-size: 1.9rem;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.2;
+}
+
+.readout .unit {
+  font-size: 0.9rem;
+  color: var(--muted);
+  margin-left: 4px;
+}
+
+.readout .note {
+  font-size: 0.75rem;
+  color: var(--muted);
+  min-height: 1em;
+  display: block;
+}
+
+/* A value the estimator produced is dimmed, so it never passes for a measurement. */
+.readout.estimated .value,
+.readout.recovered .value {
+  color: var(--warn);
+}
+
+.readout.unavailable .value {
+  color: var(--muted);
+}
+
+.readout.alert {
+  border-color: var(--alarm);
+  background: #fff5f4;
+}
+
+.readout.alert .value,
+.readout.alert .note {
+  color: var(--alarm);
+  font-weight: 600;
+}
+
+.dot.estimated,
+.dot.recovered {
+  fill: #fff;
+  stroke: var(--warn);
+  stroke-width: 2;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.controls button {
+  font: inherit;
+  padding: 5px 12px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.controls button:disabled {
+  color: var(--muted);
+  cursor: default;
+}
+
+.note {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
